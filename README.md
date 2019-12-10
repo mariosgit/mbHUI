@@ -1,2 +1,2 @@
-# mbHUI
-Generic Hardware User Interface
+# HUI - Hardware User Interface
+
