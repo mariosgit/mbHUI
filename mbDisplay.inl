@@ -1,10 +1,3 @@
-#include "mbDisplay.h"
-#include "mbPages.h"
-
-#include <SPI.h>
-#include <Wire.h>
-//#include <Adafruit_GFX.h>
-
 // from example code
 
 #define NUMFLAKES 10
@@ -87,7 +80,8 @@ template<class GFX> mbDisplay<GFX>* mbDisplay<GFX>::_the = nullptr;
 template<class GFX>
 mbDisplay<GFX>::mbDisplay() :
     //_display(OLED_DC, OLED_RESET, OLED_CS), // AdafruitGFX
-    _display(/*rotation=*/ OLED_ROTATION, /* cs=*/ OLED_CS, /* dc=*/ OLED_DC, /* reset=*/ OLED_RESET),
+    //_display(/*rotation=*/ OLED_ROTATION, /* cs=*/ OLED_CS, /* dc=*/ OLED_DC, /* reset=*/ OLED_RESET),
+    _display(),
     _blanked(false)
 {
     for(uint8_t i = 0; i < MB_MAX_PAGES; i++)
@@ -100,13 +94,15 @@ void mbDisplay<GFX>::begin()
 {
     SPI.setMOSI(SDCARD_MOSI_PIN);
     SPI.setSCK(SDCARD_SCK_PIN);
-    DISP.begin();
-    DISP.setFont(DISP_FONT1x);
-    DISP.setFontRefHeightExtendedText();
-    DISP.setFontMode(0); // 0-withBG, 1-noBG
-    DISP.setDrawColor(1); // 0-black, 1-white
-    DISP.setFontPosTop();
-    DISP.setFontDirection(0);
+    get().begin();
+    // get().setFont(DISP_FONT1x);
+    // get().setFontRefHeightExtendedText();
+    // get().setFontMode(0); // 0-withBG, 1-noBG
+    // get().setDrawColor(1); // 0-black, 1-white
+    get().setTextColor(1, 0); // fore back
+    // get().setFontPosTop();
+    // get().setFontDirection(0);
+
     changeCurrentPage(_currentPage.get());
 }
 
@@ -141,12 +137,12 @@ void mbDisplay<GFX>::changeCurrentPage(int8_t val)
         _the->_currentPage.get() = _the->_pagePtr - 1;
     // Log.warning("mbDisplay::changeCurrentPage %d\n", _the->_currentPage);
     _the->_currentPage.get() = _the->_currentPage.get() % _the->_pagePtr;
-    // Log.warning("mbDisplay::changeCurrentPage %d\n", _the->_currentPage);
+    Log.warning("mbDisplay::changeCurrentPage %d\n", _the->_currentPage);
     if( _the->_pages[_the->_currentPage.get()] )
     {
         Log.warning("mbDisplay::changeCurrentPage #%d p:%p\n", _the->_currentPage.get(), _the->_pages[_the->_currentPage.get()]);
         _the->_pages[_the->_currentPage.get()]->setActive(true);
-        _the->_pages[_the->_currentPage.get()]->redraw();
+        _the->_pages[_the->_currentPage.get()]->redrawFlag();
         _the->unblank();
     }
     else
@@ -156,7 +152,14 @@ void mbDisplay<GFX>::changeCurrentPage(int8_t val)
 }
 
 template<class GFX>
-void mbDisplay<GFX>::addPage(mbPage *page)
+void mbDisplay<GFX>::changeActiveParam(int8_t val)
+{
+    if( _the->_pages[_the->_currentPage.get()] )
+        _the->_pages[_the->_currentPage.get()]->changeActiveParam(val);
+}
+
+template<class GFX>
+void mbDisplay<GFX>::addPage(PageType *page)
 {
     _the->_pages[_the->_pagePtr++] = page;
     if(_pagePtr >= MB_MAX_PAGES)
@@ -178,10 +181,10 @@ template<class GFX>
 void mbDisplay<GFX>::blank()
 {
     Log.notice(F("**************** blank *****************\n"));
-    DISP.setDrawColor(0);
-    DISP.drawBox(0,0, 128,64);
-    DISP.setDrawColor(1);
-    DISP.sendBuffer();
+    get().setDrawColor(0);
+    get().drawBox(0,0, 128,64);
+    get().setDrawColor(1);
+    get().sendBuffer();
     _blanked = true;
 }
 
@@ -194,5 +197,3 @@ void mbDisplay<GFX>::unblank()
     getPage().update();
     _blanked = false;
 }
-// explicit template instanciation
-template class mbDisplay<U8G2DisplayType>;
