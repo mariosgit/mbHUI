@@ -46,10 +46,8 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
         display().fillRoundRect(param->x(), param->y(), param->width(), param->height(), 3, bgcolor); //OUT box
         if(_param == i)
             display().drawRoundRect(param->x(), param->y(), param->width(), param->height(), 3, fgcolor); //OUT box
-        // display().drawRFrame(param->x(), param->y(), param->width(), param->height(), 3); //OUT box
-        display().setCursor(param->x()+2, param->y()+6);
+        display().setCursor(param->x()+3, param->y()+6);
         display().print(param->name());
-        // display().drawRoundRect(param->x(), param->y(), param->width(), param->height(), 3, fgcolor); //OUT box
         const char* str = param->getString();
         if(str)
         {
@@ -59,16 +57,13 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
         else
         {
             auto mval = param->getMapped();
-            if(mval < -9)
-                {display().print(mval);}
-            else if (mval < 0)
-                {display().print(" "); display().print(mval);}
-            else if (mval < 10)
-                {display().print("  "); display().print(mval);}
-            else if (mval < 100)
-                {display().print(" "); display().print(mval);}
-            else
-                {display().print(mval);}
+            int16_t  x1, y1;
+            uint16_t w, h;
+            char str[8];
+            sprintf(str, "%d", mval);
+            display().getTextBounds(str, 0, 0, &x1, &y1, &w, &h);
+            display().setCursor(-3 + param->x() + param->width() - w, param->y()+6);
+            display().print(str);
         }
         display().setTextColor(1, 0);
     }
