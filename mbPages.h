@@ -10,16 +10,17 @@
 #define MB_MAX_PARAMS 16
 
 // some standard display coordinates...
+#define PAGES_WIDTH_X1 38
+#define PAGES_HEIGHT_X1 9
 #define PAGES_POS_X0 0
-#define PAGES_POS_X1 42
-#define PAGES_POS_X2 84
+#define PAGES_POS_X1 PAGES_WIDTH_X1
+#define PAGES_POS_X2 PAGES_WIDTH_X1*2
+#define PAGES_POS_X3 PAGES_WIDTH_X1*3
 #define PAGES_POS_Y0 0
-#define PAGES_POS_Y1 12
-#define PAGES_POS_Y2 24
-#define PAGES_POS_Y3 36
-#define PAGES_POS_Y4 48
-#define PAGES_WIDTH_X1 40
-#define PAGES_HEIGHT_X1 12
+#define PAGES_POS_Y1 (PAGES_HEIGHT_X1-1)*1
+#define PAGES_POS_Y2 (PAGES_HEIGHT_X1-1)*2
+#define PAGES_POS_Y3 (PAGES_HEIGHT_X1-1)*3
+#define PAGES_POS_Y4 (PAGES_HEIGHT_X1-1)*4
 
 /**
  * class mbPage
@@ -38,7 +39,9 @@ public:
 
     /// redraw the complete page
     virtual void redraw() = 0;
-    void redrawFlag() { _redraw = true; }
+    void setRedrawFlag() { _redraw = true; }
+    bool getRedrawFlag() { return _redraw; }
+    void resetRedrawFlag() { _redraw = false; }
     /// only redraw updated content (parameters)
     virtual void update(bool forceDrawAll = false);
 

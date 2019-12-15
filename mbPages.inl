@@ -20,18 +20,12 @@ void mbPage<DisplayType>::changeActiveParam(int16_t val)
     _param = _param % getParamCount();
     if(_param < 0)
         _param = getParamCount() - 1;
-    redrawFlag();
-    // update(true);
+    setRedrawFlag();
 }
 
 template<class DisplayType>
 void mbPage<DisplayType>::update(bool forceDrawAll)
 {
-    if(_redraw)
-    {
-        _redraw = false;
-        redraw();
-    }
     for(int i = 0; i < getParamCount(); i++)
     {
         auto *param = _params[i];
@@ -52,6 +46,10 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
         if(str)
         {
             // Log.warning("oh a string: %d %s\n", param->getI(), str);
+            int16_t  x1, y1;
+            uint16_t w, h;
+            display().getTextBounds(str, 0, 0, &x1, &y1, &w, &h);
+            display().setCursor(-3 + param->x() + param->width() - w, param->y()+6);
             display().print(str);
         }
         else
@@ -67,7 +65,6 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
         }
         display().setTextColor(1, 0);
     }
-    display().swapBuffers();
 }
 
 template<class DisplayType>

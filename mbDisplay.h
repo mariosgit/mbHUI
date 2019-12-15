@@ -59,6 +59,8 @@ public:
     void blank();
     void unblank();
 
+    void update(); // to be called in main loop..
+
 private:
     mbPage<GFX>*        _pages[MB_MAX_PAGES];
     mbParameter<int8_t> _currentPage;
