@@ -1,4 +1,5 @@
 #include <ArduinoLog.h>
+#include <mbLog.h>
 #include <EEPROM.h>
 #include "mbParameterStorage.h"
 
@@ -73,6 +74,7 @@ void mbStorage::store()
 
 void mbStorage::restore()
 {
+    LOG <<"mbStorage::restore\n";
     int eepos = 0;
     { // keep base addr in lowest bytes of eeprom (might move later, to prevent EE decration)
         uint16_t murks;

@@ -11,6 +11,7 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <SPI.h>
+
 #include "mbParameterStorage.h"
 /*
 #include <U8g2lib.h>
@@ -21,13 +22,6 @@
 #include <Wire.h>
 #endif
  */
-
-// Pins to connect the Display
-#define OLED_DC     8
-#define OLED_CS     5
-#define OLED_RESET  4
-#define SDCARD_MOSI_PIN 7
-#define SDCARD_SCK_PIN 14
 
 #define MB_MAX_PAGES 10
 

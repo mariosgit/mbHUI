@@ -2,9 +2,9 @@ template<class GFX> mbDisplay<GFX>* mbDisplay<GFX>::_the = nullptr;
 
 template<class GFX>
 mbDisplay<GFX>::mbDisplay() :
-    //_display(OLED_DC, OLED_RESET, OLED_CS), // AdafruitGFX
+    DISPLAY_CONSTRUCTOR_CALL,  // defined in mbConfig.h
     //_display(/*rotation=*/ OLED_ROTATION, /* cs=*/ OLED_CS, /* dc=*/ OLED_DC, /* reset=*/ OLED_RESET),
-    _display(),
+    //_display(),
     _blanked(false)
 {
     for(uint8_t i = 0; i < MB_MAX_PAGES; i++)
@@ -15,8 +15,7 @@ mbDisplay<GFX>::mbDisplay() :
 template<class GFX>
 void mbDisplay<GFX>::begin()
 {
-    SPI.setMOSI(SDCARD_MOSI_PIN);
-    SPI.setSCK(SDCARD_SCK_PIN);
+    DISPLAY_BEGIN_CODE  // defined in mbConfig.h
     get().begin();
     // get().setFont(DISP_FONT1x);
     // get().setFontRefHeightExtendedText();
@@ -105,10 +104,8 @@ template<class GFX>
 void mbDisplay<GFX>::blank()
 {
     Log.notice(F("**************** blank *****************\n"));
-    get().setDrawColor(0);
-    get().drawBox(0,0, 128,64);
-    get().setDrawColor(1);
-    get().sendBuffer();
+    get().clearDisplay();
+    get().display();
     _blanked = true;
 }
 
@@ -117,8 +114,9 @@ void mbDisplay<GFX>::unblank()
 {
     if(!_blanked)
         return;
+    Log.notice(F("**************** unblank ***************\n"));
     restore();
-    getPage().update();
+    get().display();
     _blanked = false;
 }
 
@@ -136,5 +134,5 @@ void mbDisplay<GFX>::update()
         getPage().update();
     }
     
-    get().swapBuffers();
+    get().display();
 }
