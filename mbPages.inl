@@ -40,7 +40,7 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
         display().fillRoundRect(param->x(), param->y(), param->width(), param->height(), 3, bgcolor); //OUT box
         if(_param == i)
             display().drawRoundRect(param->x(), param->y(), param->width(), param->height(), 3, fgcolor); //OUT box
-        display().setCursor(param->x()+3, param->y()+6);
+        display().setCursor(param->x()+3, param->y()+PAGES_HEIGHT_TEXT_OFFSET);
         display().print(param->name());
         const char* str = param->getString();
         if(str)
@@ -49,7 +49,7 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
             int16_t  x1, y1;
             uint16_t w, h;
             display().getTextBounds((char*)str, 0, 0, &x1, &y1, &w, &h);
-            display().setCursor(-3 + param->x() + param->width() - w, param->y()+6);
+            display().setCursor(-3 + param->x() + param->width() - w, param->y()+PAGES_HEIGHT_TEXT_OFFSET);
             display().print(str);
         }
         else
@@ -60,7 +60,7 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
             char str[8];
             sprintf(str, "%d", mval);
             display().getTextBounds((char*)str, 0, 0, &x1, &y1, &w, &h);
-            display().setCursor(-3 + param->x() + param->width() - w, param->y()+6);
+            display().setCursor(-3 + param->x() + param->width() - w, param->y()+PAGES_HEIGHT_TEXT_OFFSET);
             display().print(str);
         }
         display().setTextColor(1, 0);

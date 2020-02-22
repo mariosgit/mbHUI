@@ -18,3 +18,4 @@ Interaction via
 * Add Gif's
 * More Generic Display (AdafruitGFX)
 * Parameter Types
+* Font Y alignment, Scale to fit font.

@@ -9,20 +9,26 @@
 #define PAGES_FFT_BUFFER_SIZE 32
 #define MB_MAX_PARAMS 16
 
-#define FONT_BASE_ALIGN 0
-
 // some standard display coordinates...
-#define PAGES_WIDTH_X1 38
-#define PAGES_HEIGHT_X1 9
+#ifndef PAGES_WIDTH_X1
+    #define PAGES_WIDTH_X1 38
+#endif
+#ifndef PAGES_HEIGHT_X1
+    #define PAGES_HEIGHT_X1 9
+#endif
+#ifndef PAGES_HEIGHT_TEXT_OFFSET
+    #define PAGES_HEIGHT_TEXT_OFFSET 0
+#endif
 #define PAGES_POS_X0 0
 #define PAGES_POS_X1 PAGES_WIDTH_X1
 #define PAGES_POS_X2 PAGES_WIDTH_X1*2
 #define PAGES_POS_X3 PAGES_WIDTH_X1*3
 #define PAGES_POS_Y0 0
-#define PAGES_POS_Y1 (PAGES_HEIGHT_X1-1)*1+FONT_BASE_ALIGN
-#define PAGES_POS_Y2 (PAGES_HEIGHT_X1-1)*2+FONT_BASE_ALIGN
-#define PAGES_POS_Y3 (PAGES_HEIGHT_X1-1)*3+FONT_BASE_ALIGN
-#define PAGES_POS_Y4 (PAGES_HEIGHT_X1-1)*4+FONT_BASE_ALIGN
+#define PAGES_POS_Y1 (PAGES_HEIGHT_X1-1)*1
+#define PAGES_POS_Y2 (PAGES_HEIGHT_X1-1)*2
+#define PAGES_POS_Y3 (PAGES_HEIGHT_X1-1)*3
+#define PAGES_POS_Y4 (PAGES_HEIGHT_X1-1)*4
+#define PAGES_POS_Y5 (PAGES_HEIGHT_X1-1)*5
 
 /**
  * class mbPage
@@ -35,6 +41,7 @@ public:
     mbPage();
     virtual void changeActiveParam(int16_t val);
     virtual void encoderClicked() { changeActiveParam(1); } // defaults to "next param"
+    virtual void encoderHeld(int16_t val) {}
     virtual void setActive(bool val);
     inline static uint8_t* getFFTBuffer()   { return _fftBuffer;   }
     inline static int16_t* getScopeBuffer() { return _scopeBuffer; }
