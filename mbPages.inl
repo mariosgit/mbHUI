@@ -48,7 +48,7 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
             // Log.warning("oh a string: %d %s\n", param->getI(), str);
             int16_t  x1, y1;
             uint16_t w, h;
-            display().getTextBounds(str, 0, 0, &x1, &y1, &w, &h);
+            display().getTextBounds((char*)str, 0, 0, &x1, &y1, &w, &h);
             display().setCursor(-3 + param->x() + param->width() - w, param->y()+6);
             display().print(str);
         }
@@ -59,7 +59,7 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
             uint16_t w, h;
             char str[8];
             sprintf(str, "%d", mval);
-            display().getTextBounds(str, 0, 0, &x1, &y1, &w, &h);
+            display().getTextBounds((char*)str, 0, 0, &x1, &y1, &w, &h);
             display().setCursor(-3 + param->x() + param->width() - w, param->y()+6);
             display().print(str);
         }
