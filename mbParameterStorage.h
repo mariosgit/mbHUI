@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <mbLog.h>
 
 class mbParameterBase
 {
@@ -67,7 +68,7 @@ public:
     const char* operator()(int16_t value) { return nullptr; }
 };
 
-/* mbParameterRB (Range+Box) implements a typical midi range value. It can be
+/** mbParameterRB (Range+Box) implements a typical midi range value. It can be
    added to a page (todo: and set to a midi CC message) */
 template<int16_t BoxX, int16_t BoxY, int16_t BoxWidth, int16_t BoxHeight,
          class displayMapperType=identityMapper, class TriggerType=NoTrigger, class ToStringType=displayToNullString>
@@ -75,6 +76,7 @@ class mbParameterRB : public mbParameter<uint8_t>
 {
     typedef uint8_t ParameterType;
 public:
+    /// @params name, min, max
     mbParameterRB(const char* name, ParameterType min, ParameterType max) :
         mbParameter<ParameterType>(),
         _name(name),
@@ -83,14 +85,13 @@ public:
     {}
     inline void add(int16_t val) override
     {
-        if(mbParameter<ParameterType>::_param >= -val)
-            mbParameter<ParameterType>::_param += val;
-        else
-            mbParameter<ParameterType>::_param = 0;
-        if( mbParameter<ParameterType>::_param <= _min)
+        // LOG <<"add " <<(-val + mbParameter<ParameterType>::_param) <<"\n";
+        if(val + mbParameter<ParameterType>::_param < _min)
             mbParameter<ParameterType>::_param = _min;
-        if( mbParameter<ParameterType>::_param >= _max)
+        else if(val + mbParameter<ParameterType>::_param > _max)
             mbParameter<ParameterType>::_param = _max;
+        else
+            mbParameter<ParameterType>::_param += val;
         _changed = true;
     }
     inline void set(int16_t val) override
