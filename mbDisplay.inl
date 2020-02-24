@@ -133,6 +133,6 @@ void mbDisplay<GFX>::update()
     {
         getPage().update();
     }
-    
+
     get().display();
 }
