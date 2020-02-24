@@ -35,6 +35,28 @@ typedef mbDisplay<MN12832JC> DisplayType;
 typedef mbPage<MN12832JC> PageType;
 ```
 
+## AdafruitGFX -> U2G8
+
+Use U2G8 compatible display with the Adafruit_GFX class interface...
+
+(This is as complete as I need it:)
+
+```
+#include <U8g2lib.h>
+#include <AdafruitGFX2u8g2.h>
+
+// Pins to connect the Display
+#define OLED_DC     8
+#define OLED_CS     5
+#define OLED_RESET  4
+
+///// your display definitions
+#define OLED_ROTATION U8G2_R0
+typedef AdafruitGFX2u8g2<U8G2_SSD1309_128X64_NONAME2_F_4W_HW_SPI> NativeDisplayType;
+#define DISPLAY_CONSTRUCTOR_CALL _display(OLED_ROTATION, OLED_CS, OLED_DC, OLED_RESET)
+#define DISPLAY_BEGIN_CODE
+```
+
 ## Todo
 
 * Add Examples &#10004; (NOT TESTED)
