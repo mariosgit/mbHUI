@@ -32,7 +32,7 @@
 
 /**
  * class mbPage
- * 
+ *
  */
 template<class DisplayType>
 class mbPage
@@ -43,6 +43,7 @@ public:
     virtual void encoderClicked() { changeActiveParam(1); } // defaults to "next param"
     virtual void encoderHeld(int16_t val) {}
     virtual void setActive(bool val);
+    inline  bool getActive() { return _active; }
     inline static uint8_t* getFFTBuffer()   { return _fftBuffer;   }
     inline static int16_t* getScopeBuffer() { return _scopeBuffer; }
 

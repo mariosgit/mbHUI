@@ -3,8 +3,6 @@ template<class GFX> mbDisplay<GFX>* mbDisplay<GFX>::_the = nullptr;
 template<class GFX>
 mbDisplay<GFX>::mbDisplay() :
     DISPLAY_CONSTRUCTOR_CALL,  // defined in mbConfig.h
-    //_display(/*rotation=*/ OLED_ROTATION, /* cs=*/ OLED_CS, /* dc=*/ OLED_DC, /* reset=*/ OLED_RESET),
-    //_display(),
     _blanked(false)
 {
     for(uint8_t i = 0; i < MB_MAX_PAGES; i++)
