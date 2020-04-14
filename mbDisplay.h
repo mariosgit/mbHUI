@@ -9,9 +9,9 @@
 #pragma once
 
 #include <Arduino.h>
-#include <ArduinoLog.h>
 #include <SPI.h>
 
+#include <mbLog.h>
 #include "mbParameterStorage.h"
 /*
 #include <U8g2lib.h>

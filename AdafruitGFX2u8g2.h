@@ -16,7 +16,7 @@ template <class U8G2Type>
 class AdafruitGFX2u8g2 : public Adafruit_GFX
 {
 public:
-    AdafruitGFX2u8g2(const u8g2_cb_t *rotation, uint8_t cs, uint8_t dc, uint8_t reset = U8X8_PIN_NONE) :
+    AdafruitGFX2u8g2(const u8g2_cb_t *rotation, uint8_t cs = U8X8_PIN_NONE, uint8_t dc = U8X8_PIN_NONE, uint8_t reset = U8X8_PIN_NONE) :
         Adafruit_GFX(128,64),
         u8g2(rotation, cs, dc, reset)
     {

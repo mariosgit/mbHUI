@@ -14,7 +14,6 @@ template<class GFX>
 void mbDisplay<GFX>::begin()
 {
     DISPLAY_BEGIN_CODE  // defined in mbConfig.h
-    get().begin();
     // get().setFont(DISP_FONT1x);
     // get().setFontRefHeightExtendedText();
     // get().setFontMode(0); // 0-withBG, 1-noBG
@@ -60,15 +59,15 @@ void mbDisplay<GFX>::changeCurrentPage(int8_t val)
     // Log.warning("mbDisplay::changeCurrentPage %d\n", _the->_currentPage);
     if( _the->_pages[_the->_currentPage.get()] )
     {
-        Log.warning("mbDisplay::changeCurrentPage #%d p:%p\n",
-            _the->_currentPage.get(), _the->_pages[_the->_currentPage.get()]);
+        LOG <<"mbDisplay::changeCurrentPage #" <<(int)_the->_currentPage.get();
+        LOG <<" p:" <<(int)(_the->_pages[_the->_currentPage.get()]) <<"\n";
         _the->_pages[_the->_currentPage.get()]->setActive(true);
         _the->_pages[_the->_currentPage.get()]->setRedrawFlag();
         _the->unblank();
     }
     else
     {
-        Log.warning("mbDisplay::changeCurrentPage #%d p:nullPtr\n", _the->_currentPage.get());
+        LOG <<"mbDisplay::changeCurrentPage #" << _the->_currentPage.get() <<" p:nullPtr\n" ;
     }
 }
 
@@ -85,7 +84,7 @@ void mbDisplay<GFX>::addPage(PageType *page)
     _the->_pages[_the->_pagePtr++] = page;
     if(_pagePtr >= MB_MAX_PAGES)
     {
-        Log.error(F("Pages FULL\n"));
+        LOG <<"Pages FULL\n";
     }
 }
 
@@ -101,7 +100,7 @@ mbDisplay<GFX>* mbDisplay<GFX>::the()
 template<class GFX>
 void mbDisplay<GFX>::blank()
 {
-    Log.notice(F("**************** blank *****************\n"));
+    LOG <<"**************** blank *****************\n";
     get().clearDisplay();
     get().display();
     _blanked = true;
@@ -112,9 +111,9 @@ void mbDisplay<GFX>::unblank()
 {
     if(!_blanked)
         return;
-    Log.notice(F("**************** unblank ***************\n"));
+    LOG <<"**************** unblank ***************\n";
     restore();
-    get().display();
+    DISPLAY_UPDATE_CODE
     _blanked = false;
 }
 
@@ -132,5 +131,5 @@ void mbDisplay<GFX>::update()
         getPage().update();
     }
 
-    get().display();
+    DISPLAY_UPDATE_CODE
 }

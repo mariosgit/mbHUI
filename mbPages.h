@@ -19,6 +19,12 @@
 #ifndef PAGES_HEIGHT_TEXT_OFFSET
     #define PAGES_HEIGHT_TEXT_OFFSET 0
 #endif
+#ifndef DISPLAY_FG_COLOR
+    #define DISPLAY_FG_COLOR 1
+#endif
+#ifndef DISPLAY_BG_COLOR
+    #define DISPLAY_BG_COLOR 0
+#endif
 #define PAGES_POS_X0 0
 #define PAGES_POS_X1 PAGES_WIDTH_X1
 #define PAGES_POS_X2 PAGES_WIDTH_X1*2
