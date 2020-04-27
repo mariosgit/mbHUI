@@ -1,4 +1,3 @@
-#include <ArduinoLog.h>
 #include <mbLog.h>
 #include <EEPROM.h>
 #include "mbParameterStorage.h"
@@ -36,13 +35,13 @@ void mbStorage::add(mbParameterBase *param)
     _store[_storePtr++] = param;
     if(_storePtr >= _storeSize)
     {
-        Log.error(F("Storage FULL\n"));
+        LOG <<"Storage FULL\n";
     }
 }
 
 void mbStorage::dump()
 {
-    Log.notice(F("store usage %d of %d\n\n"), _storePtr, _storeSize);
+    LOG <<"store usage " <<_storePtr <<" of " <<_storeSize <<"\n\n";
     // for(int i = 0; i < _storePtr; i++)
     //     Log.notice("\t%X\n", _store[i]);
 }
@@ -83,7 +82,7 @@ void mbStorage::restore()
         {
             *ptr++ = EEPROM.read(eepos++);
         }
-        Log.notice("Read %d murks from EEPROM, base:%d\n", eepos, murks);
+        LOG <<"Read " <<eepos <<" murks from EEPROM, base:" <<murks <<"\n";
     }
     eepos = _baseAdr;
     for(int i = 0; i < _storePtr; i++)
@@ -96,5 +95,5 @@ void mbStorage::restore()
         _store[i]->add(0);    // range check
         _store[i]->trigger(); // func triggers
     }
-    Log.notice("Read %d bytes from EEPROM, base:%d\n", eepos, _baseAdr);
+    LOG <<"Read " <<eepos <<" bytes from EEPROM, base:" <<_baseAdr <<"\n";
 }

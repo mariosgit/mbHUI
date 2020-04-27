@@ -35,10 +35,10 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
         display().setTextSize(1);
         uint16_t bgcolor = _param == i ? DISPLAY_FG_COLOR : DISPLAY_BG_COLOR;
         uint16_t fgcolor = _param == i ? DISPLAY_BG_COLOR : DISPLAY_FG_COLOR;
-        display().setTextColor(fgcolor, DISPLAY_BG_COLOR);
-        display().fillRoundRect(param->x(), param->y(), param->width(), param->height(), 3, DISPLAY_BG_COLOR); //OUT box
+        display().setTextColor(fgcolor, fgcolor);
+        display().fillRoundRect(param->x(), param->y(), param->width(), param->height(), 3, bgcolor); //OUT box
         if(_param != i)
-            display().drawRoundRect(param->x(), param->y(), param->width(), param->height(), 3, DISPLAY_FG_COLOR); //OUT box
+            display().drawRoundRect(param->x(), param->y(), param->width(), param->height(), 3, fgcolor); //OUT box
         display().setCursor(param->x()+3, param->y()+PAGES_HEIGHT_TEXT_OFFSET);
         display().print(param->name());
         const char* str = param->getString();
