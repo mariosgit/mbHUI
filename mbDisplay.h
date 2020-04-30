@@ -37,23 +37,28 @@ class mbDisplay
     typedef mbPage<GFX> PageType;
 public:
     mbDisplay();
-    void begin();
-    void loop() {};
-    void restore();
 
-    void addPage(PageType *page);
+    // initialization
+    void begin(); // calls begin of GFX, the underlying display lib
+    void addPage(PageType *page); // add your pages in the order you want, no more then MB_MAX_PAGES
+    void restore(); // goes through all pages and calls triggers.. use after mbStorage::restore.
 
-    inline PageType& getPage() { return *(_the->_pages[_currentPage.get()]); }
-    static void changeCurrentPage(int8_t val);
-    static void changeActiveParam(int8_t val);
-    static mbDisplay* the();
-    static inline GFX& get() { return _the->_display; }
-    inline bool blanked() { return _blanked; }
+    // runtime, call in your main loop, with fps rate u want, e.g. 20 times/sec
+    void update(); // to be called in main loop..
 
+    // access
+    static mbDisplay* the(); // returns global pointer to the display class instance
+    PageType& getCurrentPage();
+
+    static GFX& display() { return _the->_display; }
+    bool blanked() { return _blanked; }
     void blank();
     void unblank();
 
-    void update(); // to be called in main loop..
+    // interaction, very encoder focused
+    static void changeCurrentPage(int8_t val); // +1 for next page, -1 for previous..
+    static void changeActiveParam(int8_t val); // +1 for next parameter, -1 for previous..
+    static void changeParamValue(int8_t val);  // adds val to the current parameter
 
 private:
     mbPage<GFX>*        _pages[MB_MAX_PAGES];

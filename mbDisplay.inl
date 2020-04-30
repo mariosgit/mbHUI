@@ -14,13 +14,13 @@ template<class GFX>
 void mbDisplay<GFX>::begin()
 {
     DISPLAY_BEGIN_CODE  // defined in mbConfig.h
-    // get().setFont(DISP_FONT1x);
-    // get().setFontRefHeightExtendedText();
-    // get().setFontMode(0); // 0-withBG, 1-noBG
-    // get().setDrawColor(1); // 0-black, 1-white
-    get().setTextColor(1, 0); // fore back
-    // get().setFontPosTop();
-    // get().setFontDirection(0);
+    // display().setFont(DISP_FONT1x);
+    // display().setFontRefHeightExtendedText();
+    // display().setFontMode(0); // 0-withBG, 1-noBG
+    // display().setDrawColor(1); // 0-black, 1-white
+    // display().setTextColor(1, 0); // fore back
+    // display().setFontPosTop();
+    // display().setFontDirection(0);
 
     changeCurrentPage(_currentPage.get());
 }
@@ -59,8 +59,8 @@ void mbDisplay<GFX>::changeCurrentPage(int8_t val)
     // Log.warning("mbDisplay::changeCurrentPage %d\n", _the->_currentPage);
     if( _the->_pages[_the->_currentPage.get()] )
     {
-        LOG <<"mbDisplay::changeCurrentPage #" <<(int)_the->_currentPage.get();
-        LOG <<" p:" <<(int)(_the->_pages[_the->_currentPage.get()]) <<"\n";
+        LOG <<LOG.dec <<"mbDisplay::changeCurrentPage #" <<(int)_the->_currentPage.get();
+        LOG <<LOG.hex <<" p:" <<(int)(_the->_pages[_the->_currentPage.get()]) <<"\n";
         _the->_pages[_the->_currentPage.get()]->setActive(true);
         _the->_pages[_the->_currentPage.get()]->setRedrawFlag();
         _the->unblank();
@@ -76,6 +76,12 @@ void mbDisplay<GFX>::changeActiveParam(int8_t val)
 {
     if( _the->_pages[_the->_currentPage.get()] )
         _the->_pages[_the->_currentPage.get()]->changeActiveParam(val);
+}
+
+template<class GFX>
+void mbDisplay<GFX>::changeParamValue(int8_t val)
+{
+    _the->getCurrentPage().encoderValue(val);
 }
 
 template<class GFX>
@@ -98,11 +104,17 @@ mbDisplay<GFX>* mbDisplay<GFX>::the()
 }
 
 template<class GFX>
+typename mbDisplay<GFX>::PageType& mbDisplay<GFX>::getCurrentPage()
+{
+    return *(_pages[_currentPage.get()]);
+}
+
+template<class GFX>
 void mbDisplay<GFX>::blank()
 {
     LOG <<"**************** blank *****************\n";
-    get().clearDisplay();
-    get().display();
+    display().clearDisplay();
+    display().display();
     _blanked = true;
 }
 
@@ -120,15 +132,15 @@ void mbDisplay<GFX>::unblank()
 template<class GFX>
 void mbDisplay<GFX>::update()
 {
-    if(getPage().getRedrawFlag())
+    if(getCurrentPage().getRedrawFlag())
     {
-        getPage().resetRedrawFlag();
-        getPage().redraw();
-        getPage().update(true);
+        getCurrentPage().resetRedrawFlag();
+        getCurrentPage().redraw();
+        getCurrentPage().update(true);
     }
     else
     {
-        getPage().update();
+        getCurrentPage().update();
     }
 
     DISPLAY_UPDATE_CODE

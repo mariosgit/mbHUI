@@ -82,7 +82,7 @@ void mbStorage::restore()
         {
             *ptr++ = EEPROM.read(eepos++);
         }
-        LOG <<"Read " <<eepos <<" murks from EEPROM, base:" <<murks <<"\n";
+        LOG <<LOG.dec <<"Read " <<eepos <<" murks from EEPROM, base:" <<murks <<"\n";
     }
     eepos = _baseAdr;
     for(int i = 0; i < _storePtr; i++)
@@ -92,8 +92,8 @@ void mbStorage::restore()
         {
             *ptr++ = EEPROM.read(eepos++);
         }
-        _store[i]->add(0);    // range check
-        _store[i]->trigger(); // func triggers
+        _store[i]->add(0);    // triggers a range check
+        // _store[i]->trigger(); // func triggers, do this in display.restore / page.restore !
     }
-    LOG <<"Read " <<eepos <<" bytes from EEPROM, base:" <<_baseAdr <<"\n";
+    LOG <<LOG.dec<<"Read " <<eepos <<" bytes from EEPROM, base:" <<_baseAdr <<"\n";
 }

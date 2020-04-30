@@ -75,7 +75,10 @@ void mbPage<DisplayType>::setActive(bool val)
 template<class DisplayType>
 void mbPage<DisplayType>::restore()
 {
-
+    for(int i = 0; i < _paramCount; i++)
+    {
+        _params[i]->trigger();
+    }
 }
 
 template<class DisplayType>

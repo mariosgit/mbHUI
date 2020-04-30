@@ -66,7 +66,7 @@ public:
     // inputs
     virtual void encoderValue(int16_t val);
 
-    DisplayType& display() { return _display.get(); }
+    DisplayType& display() { return _display.display(); }
 
 protected:
     int16_t _param = 0;
