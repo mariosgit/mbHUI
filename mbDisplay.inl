@@ -48,6 +48,7 @@ void mbDisplay<GFX>::restore()
 template<class GFX>
 void mbDisplay<GFX>::changeCurrentPage(int8_t val)
 {
+    _the->_timerBlank = 0;
     if( _the->_pages[_the->_currentPage.get()] )
         _the->_pages[_the->_currentPage.get()]->setActive(false);
     _the->_currentPage.get() = (_the->_currentPage.get() + val);
@@ -74,6 +75,7 @@ void mbDisplay<GFX>::changeCurrentPage(int8_t val)
 template<class GFX>
 void mbDisplay<GFX>::changeActiveParam(int8_t val)
 {
+    _the->_timerBlank = 0;
     if( _the->_pages[_the->_currentPage.get()] )
         _the->_pages[_the->_currentPage.get()]->changeActiveParam(val);
 }
@@ -81,6 +83,7 @@ void mbDisplay<GFX>::changeActiveParam(int8_t val)
 template<class GFX>
 void mbDisplay<GFX>::changeParamValue(int8_t val)
 {
+    _the->_timerBlank = 0;
     _the->getCurrentPage().encoderValue(val);
 }
 
@@ -132,6 +135,16 @@ void mbDisplay<GFX>::unblank()
 template<class GFX>
 void mbDisplay<GFX>::update()
 {
+    if(_timerBlank > 10000)
+    {
+        if(!_blanked)
+            blank();
+    }
+    else
+    {
+        unblank();
+    }
+    
     if(getCurrentPage().getRedrawFlag())
     {
         getCurrentPage().resetRedrawFlag();

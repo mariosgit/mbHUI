@@ -10,23 +10,12 @@
 
 #include <Arduino.h>
 #include <SPI.h>
+#include <elapsedMillis.h>
 
 #include <mbLog.h>
 #include "mbParameterStorage.h"
-/*
-#include <U8g2lib.h>
-#ifdef U8X8_HAVE_HW_SPI
-#include <SPI.h>
-#endif
-#ifdef U8X8_HAVE_HW_I2C
-#include <Wire.h>
-#endif
- */
 
 #define MB_MAX_PAGES 10
-
-
-// Display selection at the end !
 
 template<class GFX>
 class mbPage;
@@ -65,7 +54,10 @@ private:
     mbParameter<int8_t> _currentPage;
     uint8_t             _pagePtr = 0;
     GFX                 _display;
+
+    elapsedMillis       _timerBlank;
     bool                _blanked;
+
     static mbDisplay   *_the;
 };
 
