@@ -77,19 +77,19 @@ class mbParameterRB : public mbParameter<uint8_t>
     typedef uint8_t ParameterType;
 public:
     /// @params name, min, max
-    mbParameterRB(const char* name, ParameterType min, ParameterType max) :
+    mbParameterRB(const char* name, ParameterType minval, ParameterType maxval) :
         mbParameter<ParameterType>(),
         _name(name),
-        _min(min),
-        _max(max)
+        _minVal(minval),
+        _maxVal(maxval)
     {}
     inline void add(int16_t val) override
     {
         // LOG <<"add " <<(-val + mbParameter<ParameterType>::_param) <<"\n";
-        if(val + mbParameter<ParameterType>::_param < _min)
-            mbParameter<ParameterType>::_param = _min;
-        else if(val + mbParameter<ParameterType>::_param > _max)
-            mbParameter<ParameterType>::_param = _max;
+        if(val + mbParameter<ParameterType>::_param < _minVal)
+            mbParameter<ParameterType>::_param = _minVal;
+        else if(val + mbParameter<ParameterType>::_param > _maxVal)
+            mbParameter<ParameterType>::_param = _maxVal;
         else
             mbParameter<ParameterType>::_param += val;
         _changed = true;
@@ -97,10 +97,10 @@ public:
     inline void set(int16_t val) override
     {
         mbParameter<ParameterType>::_param = val;
-        if( mbParameter<ParameterType>::_param <= _min)
-            mbParameter<ParameterType>::_param = _min;
-        if( mbParameter<ParameterType>::_param >= _max)
-            mbParameter<ParameterType>::_param = _max;
+        if( mbParameter<ParameterType>::_param <= _minVal)
+            mbParameter<ParameterType>::_param = _minVal;
+        if( mbParameter<ParameterType>::_param >= _maxVal)
+            mbParameter<ParameterType>::_param = _maxVal;
         _changed = true;
     }
 
@@ -118,8 +118,8 @@ public:
 
 private:
     const char* _name;
-    ParameterType _min;
-    ParameterType _max;
+    ParameterType _minVal;
+    ParameterType _maxVal;
 };
 
 

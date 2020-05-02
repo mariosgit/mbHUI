@@ -53,7 +53,11 @@ void mbStorage::store()
         volatile byte *ptr = (byte*)&_baseAdr;
         for(size_t s = 0; s < sizeof(_baseAdr); s++)
         {
-            EEPROM.update(eepos++, *ptr++);
+            // EEPROM.update(eepos++, *ptr++); // ESP has no update
+            uint8_t tmp = EEPROM.read(eepos);
+            if(tmp != *ptr)
+                EEPROM.write(eepos, *ptr);
+            eepos++, ptr++;
         }
     }
     // Log.notice("Wrote %d bytes to EEPROM, base:%d\n", eepos, _baseAdr);
@@ -63,7 +67,11 @@ void mbStorage::store()
         volatile byte *ptr = (byte*)_store[i]->getPtr();
         for(size_t s = 0; s < _store[i]->getSize(); s++)
         {
-            EEPROM.update(eepos++, *ptr++);
+            // EEPROM.update(eepos++, *ptr++);
+            uint8_t tmp = EEPROM.read(eepos);
+            if(tmp != *ptr)
+                EEPROM.write(eepos, *ptr);
+            eepos++, ptr++;
         }
     }
     // Log.notice("Wrote %d bytes to EEPROM, base:%d\n", eepos, _baseAdr);

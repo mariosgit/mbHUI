@@ -22,7 +22,8 @@ void mbDisplay<GFX>::begin()
     // display().setFontPosTop();
     // display().setFontDirection(0);
 
-    changeCurrentPage(_currentPage.get());
+    if(_pagePtr)
+        changeCurrentPage(_currentPage.get());
 }
 
 template<class GFX>
@@ -101,8 +102,6 @@ void mbDisplay<GFX>::addPage(PageType *page)
 template<class GFX>
 mbDisplay<GFX>* mbDisplay<GFX>::the()
 {
-    if(!_the)
-        _the = new mbDisplay;
     return _the;
 }
 
