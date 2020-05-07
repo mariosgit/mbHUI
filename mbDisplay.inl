@@ -134,18 +134,18 @@ void mbDisplay<GFX>::update()
         unblank();
     }
     
-    if(_blanked)
-        return;
-
-    if(getCurrentPage().getRedrawFlag())
+    if(!_blanked)
     {
-        getCurrentPage().resetRedrawFlag();
-        getCurrentPage().redraw();
-        getCurrentPage().update(true);
-    }
-    else
-    {
-        getCurrentPage().update();
+        if(getCurrentPage().getRedrawFlag())
+        {
+            getCurrentPage().resetRedrawFlag();
+            getCurrentPage().redraw();
+            getCurrentPage().update(true);
+        }
+        else
+        {
+            getCurrentPage().update();
+        }
     }
 
     DISPLAY_UPDATE_CODE
