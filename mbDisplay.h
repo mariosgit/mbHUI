@@ -18,15 +18,18 @@
 #define MB_MAX_PAGES 10
 
 template<class GFX>
+class mbDisplay;
+
+template<class mbDisplay>
 class mbPage;
 
 template<class GFX>
 class mbDisplay
 {
-    typedef mbPage<GFX> PageType;
 public:
     mbDisplay();
 
+    typedef mbPage<mbDisplay<GFX> >  PageType;
     // initialization
     void begin(); // calls begin of GFX, the underlying display lib
     void addPage(PageType *page); // add your pages in the order you want, no more then MB_MAX_PAGES
@@ -36,21 +39,21 @@ public:
     void update(); // to be called in main loop..
 
     // access
-    static mbDisplay* the(); // returns global pointer to the display class instance
+    // static mbDisplay* the(); // returns global pointer to the display class instance
     PageType& getCurrentPage();
 
-    static GFX& display() { return _the->_display; }
+    GFX& display() { return _display; }
     bool blanked() { return _blanked; }
     void blank();
     void unblank();
 
     // interaction, very encoder focused
-    static void changeCurrentPage(int8_t val); // +1 for next page, -1 for previous..
-    static void changeActiveParam(int8_t val); // +1 for next parameter, -1 for previous..
-    static void changeParamValue(int8_t val);  // adds val to the current parameter
+    void changeCurrentPage(int8_t val); // +1 for next page, -1 for previous..
+    void changeActiveParam(int8_t val); // +1 for next parameter, -1 for previous..
+    void changeParamValue(int8_t val);  // adds val to the current parameter
 
 private:
-    mbPage<GFX>*        _pages[MB_MAX_PAGES];
+    PageType*           _pages[MB_MAX_PAGES];
     mbParameter<int8_t> _currentPage;
     uint8_t             _pagePtr = 0;
     GFX                 _display;
@@ -58,7 +61,7 @@ private:
     elapsedMillis       _timerBlank;
     bool                _blanked;
 
-    static mbDisplay   *_the;
+    // static mbDisplay   *_the;
 };
 
 
@@ -73,5 +76,7 @@ private:
 // font...
 //#define DISP_FONT1x u8g2_font_profont10_mf
 //#define DISP_FONT2x u8g2_font_profont22_mf //15,17,22
+
+typedef mbDisplay<NativeDisplayType> DisplayType;
 
 #include "mbDisplay.inl"

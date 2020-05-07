@@ -3,9 +3,6 @@
 #include "mbDisplay.h"
 #include "mbParameterStorage.h"
 
-#define BLACK 0
-#define WHITE 1
-
 #define PAGES_FFT_BUFFER_SIZE 32
 #define MB_MAX_PARAMS 16
 
@@ -24,6 +21,12 @@
 #endif
 #ifndef DISPLAY_BG_COLOR
     #define DISPLAY_BG_COLOR 0
+#endif
+#ifndef DISPLAY_DIM_FG_COLOR
+    #define DISPLAY_DIM_FG_COLOR 1
+#endif
+#ifndef DISPLAY_DIM_BG_COLOR
+    #define DISPLAY_DIM_BG_COLOR 0
 #endif
 #define PAGES_POS_X0 0
 #define PAGES_POS_X1 PAGES_WIDTH_X1
@@ -44,7 +47,7 @@ template<class DisplayType>
 class mbPage
 {
 public:
-    mbPage();
+    mbPage(DisplayType& display);
     virtual void changeActiveParam(int16_t val);
     virtual void encoderClicked() { changeActiveParam(1); } // defaults to "next param"
     virtual void encoderHeld(int16_t val) {}
@@ -66,19 +69,21 @@ public:
     // inputs
     virtual void encoderValue(int16_t val);
 
-    DisplayType& display() { return _display.display(); }
+    NativeDisplayType& display() { return _display.display(); }
 
 protected:
     int16_t _param = 0;
     int16_t _paramCount = 0;
     bool    _active = false;
     bool    _redraw;
-    mbDisplay<DisplayType> &_display;
+    DisplayType &_display;
 
     static uint8_t _fftBuffer[PAGES_FFT_BUFFER_SIZE];
     static int16_t _scopeBuffer[128*52];
 
     mbParameterBase* _params[MB_MAX_PARAMS];
 };
+
+typedef mbPage<mbDisplay<NativeDisplayType> > PageType;
 
 #include <mbPages.inl>

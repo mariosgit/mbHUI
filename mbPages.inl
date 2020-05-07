@@ -5,8 +5,8 @@ template<class DisplayType>
 int16_t mbPage<DisplayType>::_scopeBuffer[128*52];
 
 template<class DisplayType>
-mbPage<DisplayType>::mbPage() :
-    _display(* (mbDisplay<DisplayType>::the()) )
+mbPage<DisplayType>::mbPage(DisplayType& display) :
+    _display( display )
 {
     for(int i = 0; i < MB_MAX_PARAMS; i++)
         _params[i] = nullptr;
@@ -33,8 +33,8 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
         if(!(param->getAndClearChanged() || forceDrawAll))
             continue;
         display().setTextSize(1);
-        uint16_t bgcolor = _param == i ? DISPLAY_FG_COLOR : DISPLAY_BG_COLOR;
-        uint16_t fgcolor = _param == i ? DISPLAY_BG_COLOR : DISPLAY_FG_COLOR;
+        uint16_t bgcolor = _param == i ? DISPLAY_FG_COLOR : DISPLAY_DIM_BG_COLOR;
+        uint16_t fgcolor = _param == i ? DISPLAY_BG_COLOR : DISPLAY_DIM_FG_COLOR;
         display().setTextColor(fgcolor, fgcolor);
         display().fillRoundRect(param->x(), param->y(), param->width(), param->height(), 3, bgcolor); //OUT box
         if(_param != i)
