@@ -61,8 +61,8 @@ void mbDisplay<GFX>::changeCurrentPage(int8_t val)
     // Log.warning("mbDisplay::changeCurrentPage %d\n", _the->_currentPage);
     if( _the->_pages[_the->_currentPage.get()] )
     {
-        LOG <<LOG.dec <<"mbDisplay::changeCurrentPage #" <<(int)_the->_currentPage.get();
-        LOG <<LOG.hex <<" p:" <<(int)(_the->_pages[_the->_currentPage.get()]) <<"\n";
+        LOG <<LOG.dec <<"mbDisplay::changeCurrentPage #" <<_the->_currentPage.get();
+        LOG <<LOG.hex <<" p:" <<(int32_t)(_the->_pages[_the->_currentPage.get()]) <<"\n";
         _the->_pages[_the->_currentPage.get()]->setActive(true);
         _the->_pages[_the->_currentPage.get()]->setRedrawFlag();
         _the->unblank();
@@ -144,6 +144,9 @@ void mbDisplay<GFX>::update()
         unblank();
     }
     
+    if(_blanked)
+        return;
+
     if(getCurrentPage().getRedrawFlag())
     {
         getCurrentPage().resetRedrawFlag();
