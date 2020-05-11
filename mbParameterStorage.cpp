@@ -41,7 +41,7 @@ void mbStorage::add(mbParameterBase *param)
 
 void mbStorage::dump()
 {
-    LOG <<"store usage " <<_storePtr <<" of " <<_storeSize <<"\n\n";
+    LOG <<LOG.dec <<"store usage " <<_storePtr <<" of " <<_storeSize <<"\n\n";
     // for(int i = 0; i < _storePtr; i++)
     //     Log.notice("\t%X\n", _store[i]);
 }

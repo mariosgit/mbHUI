@@ -17,6 +17,10 @@
 
 #define MB_MAX_PAGES 10
 
+#ifndef DISPLAY_SCALER
+#define DISPLAY_SCALER 1
+#endif
+
 template<class GFX>
 class mbDisplay;
 
@@ -39,11 +43,13 @@ public:
     void update(); // to be called in main loop..
 
     // access
-    // static mbDisplay* the(); // returns global pointer to the display class instance
     PageType& getCurrentPage();
+    inline GFX& display() { return _display; }
 
-    GFX& display() { return _display; }
-    bool blanked() { return _blanked; }
+    // blank control
+    inline void setBlankTime(uint32_t val) { _blankTime = val; }  // default 60000 = 1min
+    inline void setBlankPage(int8_t val) { _blankPage = val; }    // -1 >>> no page change, or index of page to show
+    inline bool blanked() { return _blanked; }
     void blank();
     void unblank();
 
@@ -59,9 +65,9 @@ private:
     GFX                 _display;
 
     elapsedMillis       _timerBlank;
+    uint32_t            _blankTime;
+    int8_t              _blankPage;
     bool                _blanked;
-
-    // static mbDisplay   *_the;
 };
 
 

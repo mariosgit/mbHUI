@@ -1,7 +1,9 @@
 template<class GFX>
 mbDisplay<GFX>::mbDisplay() :
     DISPLAY_CONSTRUCTOR_CALL,  // defined in mbConfig.h
-    _blanked(false)
+    _blanked(false),
+    _blankTime(60000),
+    _blankPage(-1)
 {
     for(uint8_t i = 0; i < MB_MAX_PAGES; i++)
         _pages[i] = nullptr;
@@ -46,7 +48,12 @@ void mbDisplay<GFX>::restore()
 template<class GFX>
 void mbDisplay<GFX>::changeCurrentPage(int8_t val)
 {
-    _timerBlank = 0;
+    if(_timerBlank > _blankTime)
+    {
+        // unblank and ignore the input
+        _timerBlank = 0;
+        return;
+    }
     if( _pages[_currentPage.get()] )
         _pages[_currentPage.get()]->setActive(false);
     _currentPage.get() = (_currentPage.get() + val);
@@ -73,7 +80,12 @@ void mbDisplay<GFX>::changeCurrentPage(int8_t val)
 template<class GFX>
 void mbDisplay<GFX>::changeActiveParam(int8_t val)
 {
-    _timerBlank = 0;
+    if(_timerBlank > _blankTime)
+    {
+        // unblank and ignore the input
+        _timerBlank = 0;
+        return;
+    }
     if( _pages[_currentPage.get()] )
         _pages[_currentPage.get()]->changeActiveParam(val);
 }
@@ -81,7 +93,7 @@ void mbDisplay<GFX>::changeActiveParam(int8_t val)
 template<class GFX>
 void mbDisplay<GFX>::changeParamValue(int8_t val)
 {
-    _timerBlank = 0;
+    // _timerBlank = 0;
     getCurrentPage().encoderValue(val);
 }
 
@@ -105,6 +117,11 @@ template<class GFX>
 void mbDisplay<GFX>::blank()
 {
     LOG <<"**************** blank *****************\n";
+    if(_blankPage != -1 && _blankPage < _pagePtr)
+    {
+        _currentPage.set(_blankPage);
+    }
+
     display().clearDisplay();
     display().display();
     _blanked = true;
@@ -124,7 +141,7 @@ void mbDisplay<GFX>::unblank()
 template<class GFX>
 void mbDisplay<GFX>::update()
 {
-    if(_timerBlank > 60000)
+    if(_timerBlank > _blankTime)
     {
         if(!_blanked)
             blank();
