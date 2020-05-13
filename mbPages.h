@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include "mbDisplay.h"
 #include "mbParameterStorage.h"
 
@@ -50,7 +51,7 @@ template<class DisplayType>
 class mbPage
 {
 public:
-    mbPage(DisplayType& display);
+    mbPage(DisplayType& display, const char* name);
     virtual void changeActiveParam(int16_t val);
     virtual void encoderClicked() { changeActiveParam(1); } // defaults to "next param"
     virtual void encoderHeld(int16_t val) {}
@@ -58,6 +59,10 @@ public:
     inline  bool getActive() { return _active; }
     inline static uint8_t* getFFTBuffer()   { return _fftBuffer;   }
     inline static int16_t* getScopeBuffer() { return _scopeBuffer; }
+
+    inline const char* getPageName() { return _name.c_str(); }
+    const char* getParamName(uint8_t id);
+    mbParameterBase* getParam(uint8_t id);
 
     /// redraw the complete page
     virtual void redraw() = 0;
@@ -75,6 +80,7 @@ public:
     NativeDisplayType& display() { return _display.display(); }
 
 protected:
+    std::string _name;
     int16_t _param = 0;
     int16_t _paramCount = 0;
     bool    _active = false;

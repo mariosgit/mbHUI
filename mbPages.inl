@@ -5,8 +5,9 @@ template<class DisplayType>
 int16_t mbPage<DisplayType>::_scopeBuffer[128*52];
 
 template<class DisplayType>
-mbPage<DisplayType>::mbPage(DisplayType& display) :
-    _display( display )
+mbPage<DisplayType>::mbPage(DisplayType& display, const char* name) :
+    _display( display ),
+    _name(name)
 {
     for(int i = 0; i < MB_MAX_PARAMS; i++)
         _params[i] = nullptr;
@@ -70,6 +71,22 @@ template<class DisplayType>
 void mbPage<DisplayType>::setActive(bool val)
 {
     _active = val;
+}
+
+template<class DisplayType>
+const char* mbPage<DisplayType>::getParamName(uint8_t id)
+{
+    if(id > _paramCount)
+        return nullptr;
+    return _params[id]->name();
+}
+
+template<class DisplayType>
+mbParameterBase* mbPage<DisplayType>::getParam(uint8_t id)
+{
+    if(id > _paramCount)
+        return nullptr;
+    return _params[id];
 }
 
 template<class DisplayType>

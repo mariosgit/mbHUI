@@ -46,6 +46,12 @@ void mbDisplay<GFX>::restore()
 }
 
 template<class GFX>
+void mbDisplay<GFX>::setCurrentPage(int8_t val)
+{
+    changeCurrentPage(val - _currentPage.get());
+}
+
+template<class GFX>
 void mbDisplay<GFX>::changeCurrentPage(int8_t val)
 {
     if(_timerBlank > _blankTime)
@@ -108,6 +114,14 @@ void mbDisplay<GFX>::addPage(PageType *page)
 }
 
 template<class GFX>
+typename mbDisplay<GFX>::PageType& mbDisplay<GFX>::getPage(uint8_t id)
+{
+    if(id > _pagePtr)
+        return *(_pages[0]);
+    return *(_pages[id]);
+}
+
+template<class GFX>
 typename mbDisplay<GFX>::PageType& mbDisplay<GFX>::getCurrentPage()
 {
     return *(_pages[_currentPage.get()]);
@@ -133,6 +147,7 @@ void mbDisplay<GFX>::unblank()
     if(!_blanked)
         return;
     LOG <<"**************** unblank ***************\n";
+    _timerBlank = 0;
     restore();
     DISPLAY_UPDATE_CODE
     _blanked = false;

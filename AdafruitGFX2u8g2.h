@@ -53,6 +53,11 @@ public:
         // u8g cursor is at top of char, Ada is at baseline
         Adafruit_GFX::setCursor(x,y+6);
     }
+
+    // implement me !
+    inline void drawCentreString(const char*, int16_t dx, int16_t y0, uint8_t color) {}
+    inline void drawRightString(const char*, int16_t dx, int16_t y0, uint8_t color) {}
+    inline void drawLeftString(const char*, int16_t dx, int16_t y0, uint8_t color) {}
 protected:
     U8G2Type u8g2;
 };

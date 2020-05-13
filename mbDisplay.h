@@ -43,8 +43,11 @@ public:
     void update(); // to be called in main loop..
 
     // access
+    PageType& getPage(uint8_t id);
     PageType& getCurrentPage();
+    inline uint8_t getCurrentPageNum() { return _currentPage.getI(); }
     inline GFX& display() { return _display; }
+    inline uint8_t getPageCount() { return _pagePtr; }
 
     // blank control
     inline void setBlankTime(uint32_t val) { _blankTime = val; }  // default 60000 = 1min
@@ -52,6 +55,9 @@ public:
     inline bool blanked() { return _blanked; }
     void blank();
     void unblank();
+
+    // action
+    void setCurrentPage(int8_t val); // random acces
 
     // interaction, very encoder focused
     void changeCurrentPage(int8_t val); // +1 for next page, -1 for previous..
