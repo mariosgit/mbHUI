@@ -132,6 +132,7 @@ class mbStorage
 public:
     mbStorage();
     static mbStorage* the();
+    void begin();
     void dump();
     void store();
     void restore();

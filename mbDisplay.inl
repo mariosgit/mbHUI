@@ -60,6 +60,7 @@ void mbDisplay<GFX>::changeCurrentPage(int8_t val)
         _timerBlank = 0;
         return;
     }
+    _timerBlank = 0;
     if( _pages[_currentPage.get()] )
         _pages[_currentPage.get()]->setActive(false);
     _currentPage.get() = (_currentPage.get() + val);
@@ -92,6 +93,7 @@ void mbDisplay<GFX>::changeActiveParam(int8_t val)
         _timerBlank = 0;
         return;
     }
+    _timerBlank = 0;
     if( _pages[_currentPage.get()] )
         _pages[_currentPage.get()]->changeActiveParam(val);
 }
@@ -99,7 +101,13 @@ void mbDisplay<GFX>::changeActiveParam(int8_t val)
 template<class GFX>
 void mbDisplay<GFX>::changeParamValue(int8_t val)
 {
-    // _timerBlank = 0;
+    if(_timerBlank > _blankTime)
+    {
+        // unblank and ignore the input
+        _timerBlank = 0;
+        return;
+    }
+    _timerBlank = 0;
     getCurrentPage().encoderValue(val);
 }
 

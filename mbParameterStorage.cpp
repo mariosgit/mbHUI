@@ -30,6 +30,13 @@ mbStorage* mbStorage::the()
     return _the;
 }
 
+void mbStorage::begin()
+{
+#ifdef ESP32
+    EEPROM.begin(512);
+#endif
+}
+
 void mbStorage::add(mbParameterBase *param)
 {
     _store[_storePtr++] = param;
@@ -75,6 +82,9 @@ void mbStorage::store()
         }
     }
     // Log.notice("Wrote %d bytes to EEPROM, base:%d\n", eepos, _baseAdr);
+#ifdef ESP32
+    EEPROM.commit();
+#endif
 }
 // EEPROM.read(address)
 // EEPROM.update(address, data)
