@@ -84,7 +84,7 @@ protected:
     int16_t _param = 0;
     int16_t _paramCount = 0;
     bool    _active = false;
-    bool    _redraw;
+    bool    _redraw = false;
     DisplayType &_display;
 
     static uint8_t _fftBuffer[PAGES_FFT_BUFFER_SIZE];

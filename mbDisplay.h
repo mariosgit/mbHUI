@@ -12,6 +12,7 @@
 #include <SPI.h>
 #include <elapsedMillis.h>
 
+#include <mbConfig.h>
 #include <mbLog.h>
 #include "mbParameterStorage.h"
 

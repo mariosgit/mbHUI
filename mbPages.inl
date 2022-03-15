@@ -6,8 +6,8 @@ int16_t mbPage<DisplayType>::_scopeBuffer[128*52];
 
 template<class DisplayType>
 mbPage<DisplayType>::mbPage(DisplayType& display, const char* name) :
-    _display( display ),
-    _name(name)
+    _name(name),
+    _display( display )
 {
     for(int i = 0; i < MB_MAX_PARAMS; i++)
         _params[i] = nullptr;
