@@ -1,4 +1,3 @@
-
 template<class DisplayType>
 uint8_t mbPage<DisplayType>::_fftBuffer[32];
 
@@ -6,8 +5,9 @@ template<class DisplayType>
 int16_t mbPage<DisplayType>::_scopeBuffer[128*52];
 
 template<class DisplayType>
-mbPage<DisplayType>::mbPage() :
-    _display(* (mbDisplay<DisplayType>::the()) )
+mbPage<DisplayType>::mbPage(DisplayType& display, const char* name) :
+    _name(name),
+    _display( display )
 {
     for(int i = 0; i < MB_MAX_PARAMS; i++)
         _params[i] = nullptr;
@@ -34,12 +34,12 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
         if(!(param->getAndClearChanged() || forceDrawAll))
             continue;
         display().setTextSize(1);
-        uint16_t bgcolor = _param == i ? 1 : 0;
-        uint16_t fgcolor = _param == i ? 0 : 1;
-        display().setTextColor(fgcolor, bgcolor);
+        uint16_t bgcolor = _param == i ? DISPLAY_FG_COLOR : DISPLAY_DIM_BG_COLOR;
+        uint16_t fgcolor = _param == i ? DISPLAY_BG_COLOR : DISPLAY_DIM_FG_COLOR;
+        display().setTextColor(fgcolor, fgcolor);
         display().fillRoundRect(param->x(), param->y(), param->width(), param->height(), 3, bgcolor); //OUT box
         if(_param != i)
-            display().drawRoundRect(param->x(), param->y(), param->width(), param->height(), 3, 1); //OUT box
+            display().drawRoundRect(param->x(), param->y(), param->width(), param->height(), 3, fgcolor); //OUT box
         display().setCursor(param->x()+3, param->y()+PAGES_HEIGHT_TEXT_OFFSET);
         display().print(param->name());
         const char* str = param->getString();
@@ -63,7 +63,7 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
             display().setCursor(-3 + param->x() + param->width() - w, param->y()+PAGES_HEIGHT_TEXT_OFFSET);
             display().print(str);
         }
-        display().setTextColor(1, 0);
+        display().setTextColor(DISPLAY_FG_COLOR, DISPLAY_BG_COLOR);
     }
 }
 
@@ -74,9 +74,28 @@ void mbPage<DisplayType>::setActive(bool val)
 }
 
 template<class DisplayType>
+const char* mbPage<DisplayType>::getParamName(uint8_t id)
+{
+    if(id > _paramCount)
+        return nullptr;
+    return _params[id]->name();
+}
+
+template<class DisplayType>
+mbParameterBase* mbPage<DisplayType>::getParam(uint8_t id)
+{
+    if(id > _paramCount)
+        return nullptr;
+    return _params[id];
+}
+
+template<class DisplayType>
 void mbPage<DisplayType>::restore()
 {
-
+    for(int i = 0; i < _paramCount; i++)
+    {
+        _params[i]->trigger();
+    }
 }
 
 template<class DisplayType>

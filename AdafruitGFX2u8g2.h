@@ -16,7 +16,7 @@ template <class U8G2Type>
 class AdafruitGFX2u8g2 : public Adafruit_GFX
 {
 public:
-    AdafruitGFX2u8g2(const u8g2_cb_t *rotation, uint8_t cs, uint8_t dc, uint8_t reset = U8X8_PIN_NONE) :
+    AdafruitGFX2u8g2(const u8g2_cb_t *rotation, uint8_t cs = U8X8_PIN_NONE, uint8_t dc = U8X8_PIN_NONE, uint8_t reset = U8X8_PIN_NONE) :
         Adafruit_GFX(128,64),
         u8g2(rotation, cs, dc, reset)
     {
@@ -53,6 +53,11 @@ public:
         // u8g cursor is at top of char, Ada is at baseline
         Adafruit_GFX::setCursor(x,y+6);
     }
+
+    // implement me !
+    inline void drawCentreString(const char*, int16_t dx, int16_t y0, uint8_t color) {}
+    inline void drawRightString(const char*, int16_t dx, int16_t y0, uint8_t color) {}
+    inline void drawLeftString(const char*, int16_t dx, int16_t y0, uint8_t color) {}
 protected:
     U8G2Type u8g2;
 };

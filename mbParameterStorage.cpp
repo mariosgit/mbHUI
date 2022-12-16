@@ -1,4 +1,3 @@
-#include <ArduinoLog.h>
 #include <mbLog.h>
 #include <EEPROM.h>
 #include "mbParameterStorage.h"
@@ -31,18 +30,25 @@ mbStorage* mbStorage::the()
     return _the;
 }
 
+void mbStorage::begin()
+{
+#ifdef ESP32
+    EEPROM.begin(512);
+#endif
+}
+
 void mbStorage::add(mbParameterBase *param)
 {
     _store[_storePtr++] = param;
     if(_storePtr >= _storeSize)
     {
-        Log.error(F("Storage FULL\n"));
+        LOG <<"Storage FULL\n";
     }
 }
 
 void mbStorage::dump()
 {
-    Log.notice(F("store usage %d of %d\n\n"), _storePtr, _storeSize);
+    LOG <<LOG.dec <<"store usage " <<_storePtr <<" of " <<_storeSize <<"\n\n";
     // for(int i = 0; i < _storePtr; i++)
     //     Log.notice("\t%X\n", _store[i]);
 }
@@ -54,7 +60,11 @@ void mbStorage::store()
         volatile byte *ptr = (byte*)&_baseAdr;
         for(size_t s = 0; s < sizeof(_baseAdr); s++)
         {
-            EEPROM.update(eepos++, *ptr++);
+            // EEPROM.update(eepos++, *ptr++); // ESP has no update
+            uint8_t tmp = EEPROM.read(eepos);
+            if(tmp != *ptr)
+                EEPROM.write(eepos, *ptr);
+            eepos++, ptr++;
         }
     }
     // Log.notice("Wrote %d bytes to EEPROM, base:%d\n", eepos, _baseAdr);
@@ -64,10 +74,17 @@ void mbStorage::store()
         volatile byte *ptr = (byte*)_store[i]->getPtr();
         for(size_t s = 0; s < _store[i]->getSize(); s++)
         {
-            EEPROM.update(eepos++, *ptr++);
+            // EEPROM.update(eepos++, *ptr++);
+            uint8_t tmp = EEPROM.read(eepos);
+            if(tmp != *ptr)
+                EEPROM.write(eepos, *ptr);
+            eepos++, ptr++;
         }
     }
     // Log.notice("Wrote %d bytes to EEPROM, base:%d\n", eepos, _baseAdr);
+#ifdef ESP32
+    EEPROM.commit();
+#endif
 }
 // EEPROM.read(address)
 // EEPROM.update(address, data)
@@ -83,7 +100,7 @@ void mbStorage::restore()
         {
             *ptr++ = EEPROM.read(eepos++);
         }
-        Log.notice("Read %d murks from EEPROM, base:%d\n", eepos, murks);
+        LOG <<LOG.dec <<"Read " <<eepos <<" murks from EEPROM, base:" <<murks <<"\n";
     }
     eepos = _baseAdr;
     for(int i = 0; i < _storePtr; i++)
@@ -93,8 +110,8 @@ void mbStorage::restore()
         {
             *ptr++ = EEPROM.read(eepos++);
         }
-        _store[i]->add(0);    // range check
-        _store[i]->trigger(); // func triggers
+        _store[i]->add(0);    // triggers a range check
+        // _store[i]->trigger(); // func triggers, do this in display.restore / page.restore !
     }
-    Log.notice("Read %d bytes from EEPROM, base:%d\n", eepos, _baseAdr);
+    LOG <<LOG.dec<<"Read " <<eepos <<" bytes from EEPROM, base:" <<_baseAdr <<"\n";
 }
