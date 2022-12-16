@@ -49,15 +49,25 @@ void mbDisplay<GFX>::restore()
 template<class GFX>
 void mbDisplay<GFX>::changeCurrentPage(int8_t val)
 {
+    Log.warning("mbDisplay::changeCurrentPage check ? %d\n", _the->_currentPage.get());
+    // muesste das param ding nich nen range check machen !? uuuhhh
+    if(_the->_currentPage.get() < 0 || _the->_currentPage.get() > MB_MAX_PAGES-1)
+    {
+        _the->_currentPage.get() = 0;
+        Log.warning("mbDisplay::changeCurrentPage reset 0 %d\n", _the->_currentPage.get());
+    }
+
     if( _the->_pages[_the->_currentPage.get()] )
         _the->_pages[_the->_currentPage.get()]->setActive(false);
     _the->_currentPage.get() = (_the->_currentPage.get() + val);
-    // Log.warning("mbDisplay::changeCurrentPage %d\n", _the->_currentPage);
+    // Log.warning("mbDisplay::changeCurrentPage %d\n", _the->_currentPage.get());
+
     if(_the->_currentPage.get() < 0)
         _the->_currentPage.get() = _the->_pagePtr - 1;
-    // Log.warning("mbDisplay::changeCurrentPage %d\n", _the->_currentPage);
+
     _the->_currentPage.get() = _the->_currentPage.get() % _the->_pagePtr;
-    // Log.warning("mbDisplay::changeCurrentPage %d\n", _the->_currentPage);
+    Log.warning("mbDisplay::changeCurrentPage set to %d\n", _the->_currentPage.get());
+
     if( _the->_pages[_the->_currentPage.get()] )
     {
         Log.warning("mbDisplay::changeCurrentPage #%d p:%p\n",

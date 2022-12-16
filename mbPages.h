@@ -41,7 +41,7 @@ public:
     mbPage();
     virtual void changeActiveParam(int16_t val);
     virtual void encoderClicked() { changeActiveParam(1); } // defaults to "next param"
-    virtual void encoderHeld(int16_t val) {}
+    virtual void encoderHeld(int16_t val) { _display.changeCurrentPage(1); }
     virtual void setActive(bool val);
     inline  bool getActive() { return _active; }
     inline static uint8_t* getFFTBuffer()   { return _fftBuffer;   }
