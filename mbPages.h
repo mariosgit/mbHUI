@@ -93,6 +93,6 @@ protected:
     mbParameterBase* _params[MB_MAX_PARAMS];
 };
 
-typedef mbPage<mbDisplay<NativeDisplayType> > PageType;
+typedef mbPage<DisplayType> PageType;
 
 #include <mbPages.inl>

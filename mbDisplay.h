@@ -9,11 +9,9 @@
 #pragma once
 
 #include <Arduino.h>
-#include <SPI.h>
 #include <elapsedMillis.h>
 
 #include <mbConfig.h>
-#include <mbLog.h>
 #include "mbParameterStorage.h"
 
 #define MB_MAX_PAGES 10
