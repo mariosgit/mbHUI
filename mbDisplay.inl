@@ -1,9 +1,10 @@
 template<class GFX>
 mbDisplay<GFX>::mbDisplay() :
     DISPLAY_CONSTRUCTOR_CALL,  // defined in mbConfig.h
-    _blanked(false),
-    _blankTime(60000),
-    _blankPage(-1)
+    _timerBlank(0),
+    _blankTime(5*60*1000), // min*sec*ms
+    _blankPage(-1),
+    _blanked(false)
 {
     for(uint8_t i = 0; i < MB_MAX_PAGES; i++)
         _pages[i] = nullptr;
@@ -52,15 +53,13 @@ void mbDisplay<GFX>::setCurrentPage(int8_t val)
 }
 
 template<class GFX>
-void mbDisplay<GFX>::changeCurrentPage(int8_t val)
+void mbDisplay<GFX>::changeCurrentPage(int8_t val, bool force)
 {
-    if(_timerBlank > _blankTime)
-    {
-        // unblank and ignore the input
-        _timerBlank = 0;
-        return;
-    }
     _timerBlank = 0;
+    if(force)
+        _currentPage = 0;
+    if(_timerBlank > _blankTime)
+        return;
     if( _pages[_currentPage.get()] )
         _pages[_currentPage.get()]->setActive(false);
     _currentPage.get() = (_currentPage.get() + val);
@@ -87,13 +86,9 @@ void mbDisplay<GFX>::changeCurrentPage(int8_t val)
 template<class GFX>
 void mbDisplay<GFX>::changeActiveParam(int8_t val)
 {
-    if(_timerBlank > _blankTime)
-    {
-        // unblank and ignore the input
-        _timerBlank = 0;
-        return;
-    }
     _timerBlank = 0;
+    if(_timerBlank > _blankTime)
+        return;
     if( _pages[_currentPage.get()] )
         _pages[_currentPage.get()]->changeActiveParam(val);
 }
@@ -101,13 +96,9 @@ void mbDisplay<GFX>::changeActiveParam(int8_t val)
 template<class GFX>
 void mbDisplay<GFX>::changeParamValue(int8_t val)
 {
-    if(_timerBlank > _blankTime)
-    {
-        // unblank and ignore the input
-        _timerBlank = 0;
-        return;
-    }
     _timerBlank = 0;
+    if(_timerBlank > _blankTime)
+        return;
     getCurrentPage().encoderValue(val);
 }
 
@@ -174,6 +165,7 @@ void mbDisplay<GFX>::update()
         unblank();
     }
 
+    // LOG <<"update0 n:" <<getCurrentPage().getPageName() <<" \n";
     if(!_blanked)
     {
         if(getCurrentPage().getRedrawFlag())

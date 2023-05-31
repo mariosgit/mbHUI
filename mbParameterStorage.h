@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <mbConfig.h>
 #include <mbLog.h>
 
 class mbParameterBase
@@ -139,7 +140,7 @@ public:
 private:
     void add(mbParameterBase *param);
 
-    mbParameterBase* _store[64];
+    mbParameterBase* _store[PARAM_STORAGE_SIZE];
     int _storePtr  = 0;
     int _storeSize = 0;
     uint16_t _baseAdr = 4;

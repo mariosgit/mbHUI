@@ -16,8 +16,11 @@
 
 #define MB_MAX_PAGES 10
 
-#ifndef DISPLAY_SCALER
-#define DISPLAY_SCALER 1
+#ifndef DISPLAY_SCALER_X
+#define DISPLAY_SCALER_X 1
+#endif
+#ifndef DISPLAY_SCALER_Y
+#define DISPLAY_SCALER_Y 1
 #endif
 
 template<class GFX>
@@ -59,7 +62,7 @@ public:
     void setCurrentPage(int8_t val); // random acces
 
     // interaction, very encoder focused
-    void changeCurrentPage(int8_t val); // +1 for next page, -1 for previous..
+    void changeCurrentPage(int8_t val, bool force = false); // +1 for next page, -1 for previous..
     void changeActiveParam(int8_t val); // +1 for next parameter, -1 for previous..
     void changeParamValue(int8_t val);  // adds val to the current parameter
 
@@ -74,19 +77,6 @@ private:
     int8_t              _blankPage;
     bool                _blanked;
 };
-
-
-// 2.42" OLED:
-//typedef U8G2_SSD1309_128X64_NONAME2_F_4W_HW_SPI U8G2DisplayType;
-// #define OLED_ROTATION U8G2_R0
-// 1.3" mono OLED:
-// typedef U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI U8G2DisplayType;
-// #define OLED_ROTATION U8G2_R2
-//typedef mbDisplay<U8G2DisplayType> DisplayType;
-
-// font...
-//#define DISP_FONT1x u8g2_font_profont10_mf
-//#define DISP_FONT2x u8g2_font_profont22_mf //15,17,22
 
 typedef mbDisplay<NativeDisplayType> DisplayType;
 
