@@ -2,7 +2,7 @@ template<class GFX>
 mbDisplay<GFX>::mbDisplay() :
     DISPLAY_CONSTRUCTOR_CALL,  // defined in mbConfig.h
     _timerBlank(0),
-    _blankTime(5*60*1000), // min*sec*ms
+    _blankTime(60*1000), // min*sec*ms
     _blankPage(-1),
     _blanked(false)
 {
@@ -137,6 +137,10 @@ void mbDisplay<GFX>::blank()
 
     display().clearDisplay();
     display().display();
+
+    if(_blankFunc) {
+        _blankFunc();
+    }
     _blanked = true;
 }
 
@@ -147,6 +151,9 @@ void mbDisplay<GFX>::unblank()
         return;
     LOG <<"**************** unblank ***************\n";
     _timerBlank = 0;
+    if(_unblankFunc) {
+        _unblankFunc();
+    }
     restore();
     DISPLAY_UPDATE_CODE
     _blanked = false;

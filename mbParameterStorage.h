@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include <mbConfig.h>
+// #include <mbConfig.h>
 #include <mbLog.h>
 
 class mbParameterBase

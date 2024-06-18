@@ -36,6 +36,8 @@ public:
     mbDisplay();
 
     typedef mbPage<mbDisplay<GFX> >  PageType;
+    typedef void (*BlankFunction)();
+
     // initialization
     void begin(); // calls begin of GFX, the underlying display lib
     void addPage(PageType *page); // add your pages in the order you want, no more then MB_MAX_PAGES
@@ -51,12 +53,20 @@ public:
     inline GFX& display() { return _display; }
     inline uint8_t getPageCount() { return _pagePtr; }
 
-    // blank control
-    inline void setBlankTime(uint32_t val) { _blankTime = val; }  // default 60000 = 1min
-    inline void setBlankPage(int8_t val) { _blankPage = val; }    // -1 >>> no page change, or index of page to show
+    // blank time in seconds, default 60
+    inline void setBlankTime(uint32_t sec) { _blankTime = sec*1000; }
+    // -1 >>> no page change, or index of page to show
+    inline void setBlankPage(int8_t val) { _blankPage = val; }
+    // blank status
     inline bool blanked() { return _blanked; }
+    // trigger a blank
     void blank();
+    // trigger a unblank
     void unblank();
+    // set additional func to do when blanking (power off or so)
+    inline void setBlankFunc(BlankFunction func) { _blankFunc = func; }
+    // set additional func to do when unblanking (power on or so)
+    inline void setUnblankFunc(BlankFunction func) { _unblankFunc = func; }
 
     // action
     void setCurrentPage(int8_t val); // random acces
@@ -76,6 +86,9 @@ private:
     uint32_t            _blankTime;
     int8_t              _blankPage;
     bool                _blanked;
+
+    BlankFunction       _blankFunc = nullptr;
+    BlankFunction       _unblankFunc = nullptr;
 };
 
 typedef mbDisplay<NativeDisplayType> DisplayType;
