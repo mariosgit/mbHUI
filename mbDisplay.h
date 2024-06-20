@@ -51,7 +51,7 @@ public:
     PageType& getCurrentPage();
     inline uint8_t getCurrentPageNum() { return _currentPage.getI(); }
     inline GFX& display() { return _display; }
-    inline uint8_t getPageCount() { return _pagePtr; }
+    inline uint8_t getPageCount() { return _pageCount; }
 
     // blank time in seconds, default 60
     inline void setBlankTime(uint32_t sec) { _blankTime = sec*1000; }
@@ -75,11 +75,12 @@ public:
     void changeCurrentPage(int8_t val, bool force = false); // +1 for next page, -1 for previous..
     void changeActiveParam(int8_t val); // +1 for next parameter, -1 for previous..
     void changeParamValue(int8_t val);  // adds val to the current parameter
+    void changeParamValue(uint8_t paramid, int8_t val);  // adds val to the current parameter
 
 private:
     PageType*           _pages[MB_MAX_PAGES];
     mbParameter<int8_t> _currentPage;
-    uint8_t             _pagePtr = 0;
+    uint8_t             _pageCount = 0;
     GFX                 _display;
 
     elapsedMillis       _timerBlank;

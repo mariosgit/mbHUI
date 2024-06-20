@@ -133,3 +133,16 @@ void mbPage<DisplayType>::encoderValue(int16_t val)
     // if(val)
     //     display().sendBuffer();
 }
+
+template<class DisplayType>
+void mbPage<DisplayType>::changeParamValue(uint8_t paramid, int8_t val)
+{
+    if(paramid >= _paramCount)
+        return;
+
+    auto *param = _params[paramid];
+    if(param) {
+        param->add(val);
+        param->trigger();
+    }
+}

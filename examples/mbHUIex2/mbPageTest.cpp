@@ -6,7 +6,7 @@ void mbPageTestDebugTrigger::operator()(uint8_t value)
     LOG <<"irgnwas:" <<value <<"\n";
 }
 
-mbPageTest::mbPageTest() : PageType(),
+mbPageTest::mbPageTest(DisplayType &disp) : PageType(disp, "test"),
     _irgnwas0("a", 0, 64),
     _irgnwas1("b", 128, 255)
 {

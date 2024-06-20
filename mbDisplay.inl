@@ -22,7 +22,7 @@ void mbDisplay<GFX>::begin()
     // display().setFontPosTop();
     // display().setFontDirection(0);
 
-    if(_pagePtr)
+    if(_pageCount)
         changeCurrentPage(_currentPage.get());
 }
 
@@ -31,8 +31,8 @@ void mbDisplay<GFX>::restore()
 {
     // range fix after restore
     if(_currentPage.get() < 0)
-        _currentPage.get() = _pagePtr - 1;
-    _currentPage.get() = _currentPage.get() % _pagePtr;
+        _currentPage.get() = _pageCount - 1;
+    _currentPage.get() = _currentPage.get() % _pageCount;
 
     // _currentPage.get() = 1;
     for(uint8_t i = 0; i < MB_MAX_PAGES; i++)
@@ -65,9 +65,9 @@ void mbDisplay<GFX>::changeCurrentPage(int8_t val, bool force)
     _currentPage.get() = (_currentPage.get() + val);
     // Log.warning("mbDisplay::changeCurrentPage %d\n", _currentPage);
     if(_currentPage.get() < 0)
-        _currentPage.get() = _pagePtr - 1;
+        _currentPage.get() = _pageCount - 1;
     // Log.warning("mbDisplay::changeCurrentPage %d\n", _currentPage);
-    _currentPage.get() = _currentPage.get() % _pagePtr;
+    _currentPage.get() = _currentPage.get() % _pageCount;
     // Log.warning("mbDisplay::changeCurrentPage %d\n", _currentPage);
     if(_pages[_currentPage.get()] )
     {
@@ -103,10 +103,19 @@ void mbDisplay<GFX>::changeParamValue(int8_t val)
 }
 
 template<class GFX>
+void mbDisplay<GFX>::changeParamValue(uint8_t paramid, int8_t val)
+{
+    _timerBlank = 0;
+    if(_timerBlank > _blankTime)
+        return;
+    getCurrentPage().changeParamValue(paramid, val);
+}
+
+template<class GFX>
 void mbDisplay<GFX>::addPage(PageType *page)
 {
-    _pages[_pagePtr++] = page;
-    if(_pagePtr >= MB_MAX_PAGES)
+    _pages[_pageCount++] = page;
+    if(_pageCount >= MB_MAX_PAGES)
     {
         LOG <<"Pages FULL\n";
     }
@@ -115,7 +124,7 @@ void mbDisplay<GFX>::addPage(PageType *page)
 template<class GFX>
 typename mbDisplay<GFX>::PageType& mbDisplay<GFX>::getPage(uint8_t id)
 {
-    if(id > _pagePtr)
+    if(id > _pageCount)
         return *(_pages[0]);
     return *(_pages[id]);
 }
@@ -123,6 +132,11 @@ typename mbDisplay<GFX>::PageType& mbDisplay<GFX>::getPage(uint8_t id)
 template<class GFX>
 typename mbDisplay<GFX>::PageType& mbDisplay<GFX>::getCurrentPage()
 {
+    // when blanked and a blankpage is set, use this...
+    if(_blanked && _blankPage != -1) {
+        return *(_pages[_blankPage]);
+    }
+    // otherwise be normal.
     return *(_pages[_currentPage.get()]);
 }
 
@@ -130,13 +144,16 @@ template<class GFX>
 void mbDisplay<GFX>::blank()
 {
     LOG <<"**************** blank *****************\n";
-    if(_blankPage != -1 && _blankPage < _pagePtr)
+    if(_blankPage != -1 && _blankPage < _pageCount)
     {
-        _currentPage.set(_blankPage);
+        // _currentPage.set(_blankPage);
+    }
+    else
+    {
+        display().clearDisplay();
+        display().display();
     }
 
-    display().clearDisplay();
-    display().display();
 
     if(_blankFunc) {
         _blankFunc();
@@ -173,7 +190,7 @@ void mbDisplay<GFX>::update()
     }
 
     // LOG <<"update0 n:" <<getCurrentPage().getPageName() <<" \n";
-    if(!_blanked)
+    if(!_blanked || _blankPage != -1)
     {
         if(getCurrentPage().getRedrawFlag())
         {

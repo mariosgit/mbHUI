@@ -76,6 +76,8 @@ public:
     virtual int8_t getParamCount() { return _paramCount; };
     // inputs
     virtual void encoderValue(int16_t val);
+    // change any param, use for dedicated buttons
+    virtual void changeParamValue(uint8_t paramid, int8_t val);
 
     NativeDisplayType& display() { return _display.display(); }
 

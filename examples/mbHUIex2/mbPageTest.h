@@ -11,7 +11,7 @@ public:
 class mbPageTest : public PageType
 {
   public:
-    mbPageTest();
+    mbPageTest(DisplayType &disp);
 
     void redraw() override;
     void update(bool forceDrawAll) override;
