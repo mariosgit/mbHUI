@@ -16,10 +16,19 @@ mbPage<DisplayType>::mbPage(DisplayType& display, const char* name) :
 template<class DisplayType>
 void mbPage<DisplayType>::changeActiveParam(int16_t val)
 {
+    auto old = _param;
     _param += val;
     _param = _param % getParamCount();
     if(_param < 0)
         _param = getParamCount() - 1;
+    if(!_params[_param]->drawme()) {
+        // skip ?? // looses turn around ability !?
+        _param += val;
+        _param = _param % getParamCount();
+        if(_param < 0 ) {
+            _param = getParamCount() - 1;
+        }
+    }
     setRedrawFlag();
 }
 
@@ -32,6 +41,8 @@ void mbPage<DisplayType>::update(bool forceDrawAll)
         if(!param)
             continue;
         if(!(param->getAndClearChanged() || forceDrawAll))
+            continue;
+        if(!param->drawme())
             continue;
         display().setTextSize(1);
         uint16_t bgcolor = _param == i ? DISPLAY_FG_COLOR : DISPLAY_DIM_BG_COLOR;

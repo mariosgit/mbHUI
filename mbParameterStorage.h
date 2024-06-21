@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Arduino.h>
-// #include <mbConfig.h>
 #include <mbLog.h>
 
 class mbParameterBase
@@ -22,6 +21,9 @@ public:
     virtual const int16_t height() { return 0; }
     virtual const int16_t width()  { return 0;  }
     virtual const char*   name()   { return ""; }
+
+    // tells the mbPages to do generic drawing
+    virtual bool drawme() { return true; }
 
     inline bool getAndClearChanged() { bool result = _changed; _changed = false; return result; }
 protected:
@@ -69,10 +71,17 @@ public:
     const char* operator()(int16_t value) { return nullptr; }
 };
 
+class drawYesFunc {
+public:
+    bool drawme() {return true;} // replacement should say false.
+    void operator()() {}
+};
+
 /** mbParameterRB (Range+Box) implements a typical midi range value. It can be
    added to a page (todo: and set to a midi CC message) */
 template<int16_t BoxX, int16_t BoxY, int16_t BoxWidth, int16_t BoxHeight,
-         class displayMapperType=identityMapper, class TriggerType=NoTrigger, class ToStringType=displayToNullString>
+         class displayMapperType=identityMapper, class TriggerType=NoTrigger, class ToStringType=displayToNullString,
+         class DrawFuncType=drawYesFunc>
 class mbParameterRB : public mbParameter<uint8_t>
 {
     typedef uint8_t ParameterType;
@@ -116,6 +125,10 @@ public:
     inline const char* getString() override { return ts(getI()); }
 
     inline void trigger() override { TriggerType tt; tt(_param); }
+
+    inline bool drawme() override { return drawFunc.drawme(); }
+
+    DrawFuncType drawFunc;
 
 private:
     const char* _name;
