@@ -14,7 +14,9 @@
 #include <mbConfig.h>
 #include "mbParameterStorage.h"
 
+#ifndef MB_MAX_PAGES
 #define MB_MAX_PAGES 10
+#endif
 
 #ifndef DISPLAY_SCALER_X
 #define DISPLAY_SCALER_X 1
