@@ -16,7 +16,6 @@ mbPage<DisplayType>::mbPage(DisplayType& display, const char* name) :
 template<class DisplayType>
 void mbPage<DisplayType>::changeActiveParam(int16_t val)
 {
-    auto old = _param;
     _param += val;
     _param = _param % getParamCount();
     if(_param < 0)
