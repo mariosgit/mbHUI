@@ -164,10 +164,10 @@ void mbDisplay<GFX>::blank()
 template<class GFX>
 void mbDisplay<GFX>::unblank()
 {
+    _timerBlank = 0;
     if(!_blanked)
         return;
     LOG <<"**************** unblank ***************\n";
-    _timerBlank = 0;
     if(_unblankFunc) {
         _unblankFunc();
     }
@@ -186,7 +186,8 @@ void mbDisplay<GFX>::update()
     }
     else
     {
-        unblank();
+        if(_blanked)
+            unblank();
     }
 
     // LOG <<"update0 n:" <<getCurrentPage().getPageName() <<" \n";
