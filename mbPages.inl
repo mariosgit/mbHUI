@@ -16,6 +16,8 @@ mbPage<DisplayType>::mbPage(DisplayType& display, const char* name) :
 template<class DisplayType>
 void mbPage<DisplayType>::changeActiveParam(int16_t val)
 {
+    if(getParamCount() == 0) return;
+
     _param += val;
     _param = _param % getParamCount();
     if(_param < 0)
@@ -86,6 +88,7 @@ void mbPage<DisplayType>::setActive(bool val)
 template<class DisplayType>
 const char* mbPage<DisplayType>::getParamName(uint8_t id)
 {
+    if(getParamCount() == 0) return nullptr;
     if(id > _paramCount)
         return nullptr;
     return _params[id]->name();
@@ -94,6 +97,7 @@ const char* mbPage<DisplayType>::getParamName(uint8_t id)
 template<class DisplayType>
 mbParameterBase* mbPage<DisplayType>::getParam(uint8_t id)
 {
+    if(getParamCount() == 0) return nullptr;
     if(id > _paramCount)
         return nullptr;
     return _params[id];
@@ -147,6 +151,7 @@ void mbPage<DisplayType>::encoderValue(int16_t val)
 template<class DisplayType>
 void mbPage<DisplayType>::changeParamValue(uint8_t paramid, int8_t val)
 {
+    if(getParamCount() == 0) return;
     if(paramid >= _paramCount)
         return;
 
